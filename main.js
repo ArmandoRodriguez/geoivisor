@@ -81,7 +81,7 @@ const riesgoIncendioFWI = L.tileLayer.wms(effisWmsUrl, {
 // Objeto que contiene todas las capas de superposición
 const overlayMaps = {
     "Riesgo de Incendio (FWI)": riesgoIncendioFWI,
-    "Focos de Calor VIIRS (24h)": focosVIIRS_24h
+    "Focos de Calor VIIRS (24h)": focosDeCalorLayer
 };
 
 L.control.layers(baseMaps, overlayMaps).addTo(map);
