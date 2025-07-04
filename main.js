@@ -1,6 +1,6 @@
 // Coordenadas de la UCB y zoom inicial
 const ucbCoords = [-17.4045, -66.1772];
-const initialZoom = 17;
+const initialZoom = 10;
 
 // --- 1. DEFINICIÓN DE MAPAS BASE ---
 const baseMapStreets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -19,22 +19,16 @@ const baseMaps = {
 
 
 // --- 2. INICIALIZACIÓN DEL MAPA Y MARCADOR ---
-// Se inicializa el mapa con una capa por defecto
 const map = L.map('map', {
     layers: [baseMapStreets] 
 }).setView(ucbCoords, initialZoom);
 
-// Se añade el control para cambiar de mapa base
-L.control.layers(baseMaps).addTo(map);
-
-// Se añade el marcador de la UCB
 L.marker(ucbCoords).addTo(map)
     .bindPopup("<b>Universidad Católica Boliviana 'San Pablo'</b><br>Sede Cochabamba.")
     .openPopup();
 
 
 // --- 3. CARGA DE CAPA GEOJSON (DESDE SHAPEFILE CONVERTIDO) ---
-// Asegúrate de tener el archivo 'mis_datos.geojson' en una carpeta 'data'
 fetch('data/mis_datos.geojson')
     .then(response => {
         if (!response.ok) {
@@ -44,18 +38,11 @@ fetch('data/mis_datos.geojson')
     })
     .then(data => {
         L.geoJSON(data, {
-            // Función para estilizar la capa
             style: function (feature) {
-                return {
-                    color: "#003399", // Un color azul
-                    weight: 2,
-                    opacity: 0.8
-                };
+                return { color: "#003399", weight: 2, opacity: 0.8 };
             },
-            // Función para añadir popups a cada polígono/línea/punto
             onEachFeature: function (feature, layer) {
                 if (feature.properties) {
-                    // Crea un popup con todos los datos de las propiedades
                     let popupContent = '<b>Propiedades:</b><br>';
                     for (let key in feature.properties) {
                         popupContent += `${key}: ${feature.properties[key]}<br>`;
@@ -69,3 +56,23 @@ fetch('data/mis_datos.geojson')
         console.error('Error:', error);
         alert('No se pudieron cargar los datos de la capa. Revisa la consola para más detalles (F12).');
     });
+
+
+// --- 4. CAPA DE FOCOS DE CALOR (WMS DE FIRMS NASA) ---
+const firmsWmsUrl = 'https://firms.modaps.eosdis.nasa.gov/wms/latesthotspots/';
+const focosDeCalorLayer = L.tileLayer.wms(firmsWmsUrl, {
+    layers: 'VIIRS_S-NPP_Latest',
+    format: 'image/png',
+    transparent: true,
+    attribution: '<a href="https://firms.modaps.eosdis.nasa.gov/">FIRMS</a> | NASA'
+});
+
+// Objeto para las capas de superposición
+const overlayMaps = {
+    "Focos de Calor (FIRMS)": focosDeCalorLayer
+};
+
+
+// --- 5. CONTROL DE CAPAS ---
+// Se añade el control completo con mapas base y capas de superposición
+L.control.layers(baseMaps, overlayMaps).addTo(map);
