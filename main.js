@@ -53,7 +53,8 @@ fetch('data/mis_datos.geojson')
 
 
 const firmsApiKey = 'a1a0615d71695e65c3fef82ad59ed0b4'; 
-const firmsWmsUrlConLlave = `https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/${firmsApiKey}/`;
+//`https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/${mapKey}/fires_viirs_24/
+const firmsWmsUrlConLlave = `https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/${firmsApiKey}/fires_viirs_24/`;
 const focosDeCalorLayer = L.tileLayer.wms(firmsWmsUrlConLlave, {
     layers: 'fires_viirs_snpp_24', // Capa para datos de VIIRS (24h) con API Key
     format: 'image/png',
