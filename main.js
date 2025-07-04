@@ -1,6 +1,8 @@
+// Coordenadas de la UCB y zoom inicial
 const ucbCoords = [-17.4045, -66.1772];
-const initialZoom = 8;
+const initialZoom = 17;
 
+// --- 1. DEFINICIÓN DE MAPAS BASE ---
 const baseMapStreets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 });
@@ -14,15 +16,16 @@ const baseMaps = {
     "Vista Satelital": baseMapSatellite
 };
 
+// --- 2. INICIALIZACIÓN DEL MAPA Y MARCADOR ---
 const map = L.map('map', {
-    layers: [baseMapStreets] 
+    layers: [baseMapStreets]
 }).setView(ucbCoords, initialZoom);
 
 L.marker(ucbCoords).addTo(map)
     .bindPopup("<b>Universidad Católica Boliviana 'San Pablo'</b><br>Sede Cochabamba.")
     .openPopup();
 
-
+// --- 3. CARGA DE CAPA GEOJSON (DESDE SHAPEFILE CONVERTIDO) ---
 fetch('data/mis_datos.geojson')
     .then(response => {
         if (!response.ok) {
@@ -51,16 +54,16 @@ fetch('data/mis_datos.geojson')
         alert('No se pudieron cargar los datos de la capa. Revisa la consola para más detalles (F12).');
     });
 
-
 const firmsApiKey = 'a1a0615d71695e65c3fef82ad59ed0b4'; 
-//`https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/${mapKey}/fires_viirs_24/
 const firmsWmsUrlConLlave = `https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/${firmsApiKey}/fires_viirs_24/`;
-const focosDeCalorLayer = L.tileLayer.wms(firmsWmsUrlConLlave, {
-    layers: 'fires_viirs_snpp_24', // Capa para datos de VIIRS (24h) con API Key
+
+const focosVIIRS_24h = L.tileLayer.wms(firmsWmsUrlConLlave, {
+    layers: 'fires_viirs_snpp_24',
     format: 'image/png',
     transparent: true,
-    attribution: '<a href="https://firms.modaps.eosdis.nasa.gov/">FIRMS</a> | NASA'
+    attribution: 'VIIRS/FIRMS | NASA'
 });
+
 const effisWmsUrl = 'https://maps.effis.emergency.copernicus.eu/gwis';
 
 const tomorrow = new Date();
@@ -81,7 +84,8 @@ const riesgoIncendioFWI = L.tileLayer.wms(effisWmsUrl, {
 // Objeto que contiene todas las capas de superposición
 const overlayMaps = {
     "Riesgo de Incendio (FWI)": riesgoIncendioFWI,
-    "Focos de Calor VIIRS (24h)": focosDeCalorLayer
+    "Focos de Calor VIIRS (24h)": focosVIIRS_24h
 };
 
+// --- 5. CONTROL DE CAPAS ---
 L.control.layers(baseMaps, overlayMaps).addTo(map);
