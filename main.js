@@ -59,9 +59,9 @@ fetch('data/mis_datos.geojson')
 
 
 // --- 4. CAPA DE FOCOS DE CALOR (WMS DE FIRMS NASA) ---
-const firmsWmsUrl = 'https://firms.modaps.eosdis.nasa.gov/wms/latesthotspots/';
+const firmsWmsUrl = 'https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/YourMapKey/fires_viirs_24/?REQUEST=GetMap&WIDTH=1024&HEIGHT=512&BBOX=-180,-90,180,90';
 const focosDeCalorLayer = L.tileLayer.wms(firmsWmsUrl, {
-    layers: 'VIIRS_S-NPP_Latest',
+    layers: 'VIIRS_S-NPP_24hrs',
     format: 'image/png',
     transparent: true,
     attribution: '<a href="https://firms.modaps.eosdis.nasa.gov/">FIRMS</a> | NASA'
