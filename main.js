@@ -1,5 +1,5 @@
 const ucbCoords = [-17.4045, -66.1772];
-const initialZoom = 17;
+const initialZoom = 8;
 
 const baseMapStreets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
