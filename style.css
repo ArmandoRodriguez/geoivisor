@@ -1,0 +1,44 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #007bff; /* Un color azul llamativo */
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 5px;
+}
+
+#map {
+    flex-grow: 1; /* Permite que el mapa crezca y ocupe el espacio restante */
+    margin: 10px;
+    border: 1px solid #ccc;
+}
+
+footer {
+    background-color: #333;
+    color: #f4f4f4;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+footer a {
+    color: #f4f4f4;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
