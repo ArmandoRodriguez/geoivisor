@@ -1,8 +1,6 @@
-// Coordenadas de la UCB y zoom inicial
 const ucbCoords = [-17.4045, -66.1772];
-const initialZoom = 10;
+const initialZoom = 17;
 
-// --- 1. DEFINICIÓN DE MAPAS BASE ---
 const baseMapStreets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 });
@@ -11,14 +9,11 @@ const baseMapSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/res
     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, et al.'
 });
 
-// Objeto que agrupa las capas base
 const baseMaps = {
     "Mapa de Calles": baseMapStreets,
     "Vista Satelital": baseMapSatellite
 };
 
-
-// --- 2. INICIALIZACIÓN DEL MAPA Y MARCADOR ---
 const map = L.map('map', {
     layers: [baseMapStreets] 
 }).setView(ucbCoords, initialZoom);
@@ -28,7 +23,6 @@ L.marker(ucbCoords).addTo(map)
     .openPopup();
 
 
-// --- 3. CARGA DE CAPA GEOJSON (DESDE SHAPEFILE CONVERTIDO) ---
 fetch('data/mis_datos.geojson')
     .then(response => {
         if (!response.ok) {
@@ -58,21 +52,16 @@ fetch('data/mis_datos.geojson')
     });
 
 
-// --- 4. CAPA DE FOCOS DE CALOR (WMS DE FIRMS NASA) ---
-const firmsWmsUrl = 'https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/YourMapKey/fires_viirs_24/?REQUEST=GetMap&WIDTH=1024&HEIGHT=512&BBOX=-180,-90,180,90';
-const focosDeCalorLayer = L.tileLayer.wms(firmsWmsUrl, {
-    layers: 'VIIRS_S-NPP_24hrs',
+const firmsApiKey = 'a1a0615d71695e65c3fef82ad59ed0b4'; 
+const firmsWmsUrlConLlave = `https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/${firmsApiKey}/`;
+const focosDeCalorLayer = L.tileLayer.wms(firmsWmsUrlConLlave, {
+    layers: 'fires_viirs_snpp_24', // Capa para datos de VIIRS (24h) con API Key
     format: 'image/png',
     transparent: true,
     attribution: '<a href="https://firms.modaps.eosdis.nasa.gov/">FIRMS</a> | NASA'
 });
-
-// Objeto para las capas de superposición
 const overlayMaps = {
     "Focos de Calor (FIRMS)": focosDeCalorLayer
 };
 
-
-// --- 5. CONTROL DE CAPAS ---
-// Se añade el control completo con mapas base y capas de superposición
 L.control.layers(baseMaps, overlayMaps).addTo(map);
