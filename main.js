@@ -61,8 +61,27 @@ const focosDeCalorLayer = L.tileLayer.wms(firmsWmsUrlConLlave, {
     transparent: true,
     attribution: '<a href="https://firms.modaps.eosdis.nasa.gov/">FIRMS</a> | NASA'
 });
+const effisWmsUrl = 'https://maps.effis.emergency.copernicus.eu/gwis';
+
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+const year = tomorrow.getFullYear();
+const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+const day = String(tomorrow.getDate()).padStart(2, '0');
+const forecastDate = `${year}-${month}-${day}`;
+
+const riesgoIncendioFWI = L.tileLayer.wms(effisWmsUrl, {
+    layers: 'ecmwf.fwi',
+    format: 'image/png',
+    transparent: true,
+    time: forecastDate, // Usamos la fecha de mañana que generamos
+    attribution: 'Copernicus EFFIS'
+});
+
+// Objeto que contiene todas las capas de superposición
 const overlayMaps = {
-    "Focos de Calor (FIRMS)": focosDeCalorLayer
+    "Riesgo de Incendio (FWI)": riesgoIncendioFWI,
+    "Focos de Calor VIIRS (24h)": focosVIIRS_24h
 };
 
 L.control.layers(baseMaps, overlayMaps).addTo(map);
