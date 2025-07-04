@@ -1,6 +1,6 @@
 // Coordenadas de la UCB y zoom inicial
 const ucbCoords = [-17.4045, -66.1772];
-const initialZoom = 17;
+const initialZoom = 5;
 
 // --- 1. DEFINICIÓN DE MAPAS BASE ---
 const baseMapStreets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
